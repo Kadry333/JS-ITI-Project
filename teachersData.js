@@ -1,14 +1,10 @@
 (function setupDefaultTeachers() {
-  // اقرأ القيم الحالية أو خليها مصفوفات فارغة
   let users = JSON.parse(localStorage.getItem("users") || "[]");
   let teachers = JSON.parse(localStorage.getItem("teachers") || "[]");
 
-  // لو المدرسين موجودين بالفعل متعملش حاجة
   if (teachers.length > 0) {
     return;
   }
-
-  // ---- Teacher 1 ----
   let tUserId1 = 1001;
   users.push({
     id: tUserId1,
@@ -21,8 +17,6 @@
     userId: tUserId1,
     course: "Plants"
   });
-
-  // ---- Teacher 2 ----
   let tUserId2 = 1002;
   users.push({
     id: tUserId2,
@@ -36,8 +30,7 @@
     course: "Planets"
   });
 
-  // ---- Teacher 3 ----
-  let tUserId3 = 1003; // لازم تعريف المتغير
+  let tUserId3 = 1003;
   users.push({
     id: tUserId3,
     username: "teacher3",
@@ -50,7 +43,6 @@
     course: "Animals"
   });
 
-  // احفظ التغييرات
   localStorage.setItem("users", JSON.stringify(users));
   localStorage.setItem("teachers", JSON.stringify(teachers));
 })();
