@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-900">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./forms/src/output.css" />
+  <title>Add Questions</title>
+</head>
+
+<body class="h-full">
+  <div class="min-h-full px-6 py-10 lg:px-20">
+
+    <h1 class="mb-4 text-center text-3xl font-bold text-white">
+      Add Questions
+    </h1>
+
+    <p class="mb-8 text-center text-gray-300">
+      Question <span class="font-semibold">1</span> of <span class="font-semibold">15</span>
+    </p>
+
+    <div class="rounded-lg bg-white/5 p-6 outline outline-1 outline-white/10">
+
+      <!-- Question Text -->
+      <div class="mb-4">
+        <label class="block text-sm text-gray-300">Question Text</label>
+        <textarea
+          class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10"></textarea>
+      </div>
+
+      <!-- Image -->
+      <div class="mb-4">
+        <label class="block text-sm text-gray-300">Question Image</label>
+        <input type="file"
+          class="mt-1 w-full text-sm text-gray-300 file:rounded file:border-0 file:bg-indigo-500 file:px-3 file:py-1 file:text-white hover:file:bg-indigo-400">
+      </div>
+
+      <!-- Answers -->
+      <div class="mb-4 grid gap-4 sm:grid-cols-2">
+        <input placeholder="Answer A"
+          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
+        <input placeholder="Answer B"
+          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
+        <input placeholder="Answer C"
+          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
+        <input placeholder="Answer D"
+          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
+      </div>
+
+      <!-- Controls -->
+      <div class="grid gap-4 sm:grid-cols-3">
+        <select class="rounded-md bg-white/5 px-3 py-2 text-gray-200 outline outline-1 outline-white/10">
+          <option>Correct Answer</option>
+          <option>A</option>
+          <option>B</option>
+          <option>C</option>
+          <option>D</option>
+        </select>
+
+        <select class="rounded-md bg-white/5 px-3 py-2 text-gray-200 outline outline-1 outline-white/10">
+          <option>Difficulty</option>
+          <option>Easy</option>
+          <option>Middle</option>
+          <option>Hard</option>
+        </select>
+
+        <input type="number" placeholder="Score"
+          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
+      </div>
+
+      <button
+        class="mt-6 w-full rounded-md bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
+        Next Question
+      </button>
+
+    </div>
+  </div>
+</body>
+</html>

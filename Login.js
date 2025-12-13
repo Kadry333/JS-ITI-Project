@@ -31,7 +31,7 @@ document.getElementById("loginForm").addEventListener("submit",function(e)
         if(role == "student")
              window.location.href = "studentProfile.html";
         else
-             window.location.href = "teacherProfile.html";
+             window.location.href = "Teacher_Exam.html";
     }
     else if(exists && !match)
         console.log("password is wrong");
