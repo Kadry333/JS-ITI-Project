@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-gray-900">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./forms/src/output.css" />
+  <link rel="stylesheet" href="../forms/src/output.css" />
   <title>Teacher Exams</title>
 </head>
 
@@ -22,32 +23,22 @@
       <div class="grid gap-6 sm:grid-cols-2">
         <div>
           <label class="block text-sm text-gray-400">Exam Name</label>
-          <input
-            type="text"
-            id="examName"
-            class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10 focus:outline-indigo-500"
-          />
+          <input type="text" id="examName"
+            class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10 focus:outline-indigo-500" />
         </div>
 
         <div>
           <label class="block text-sm text-gray-400">Duration (minutes)</label>
-          <input
-            type="number"
-            id="examDuration"
-            class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10 focus:outline-indigo-500"
-          />
+          <input type="number" id="examDuration"
+            class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10 focus:outline-indigo-500" />
         </div>
 
         <div>
           <label class="block text-sm text-gray-400">
             Number of Questions (≥ 15)
           </label>
-          <input
-            type="number"
-            id="questionsCount"
-            min="15"
-            class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10 focus:outline-indigo-500"
-          />
+          <input type="number" id="questionsCount" min="15"
+            class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10 focus:outline-indigo-500" />
         </div>
       </div>
 
@@ -56,10 +47,7 @@
           Select Students
         </p>
 
-        <div
-          id="studentsList"
-          class="grid gap-2 sm:grid-cols-3 text-gray-500"
-        >
+        <div id="studentsList" class="grid gap-2 sm:grid-cols-3 text-gray-500">
           <label class="flex items-center gap-2">
             <input type="checkbox" />
             Student Name
@@ -68,10 +56,8 @@
       </div>
 
       <!-- Create Button -->
-      <button
-        id="createExamBtn"
-        class="mt-8 rounded-md bg-indigo-500 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-400"
-      >
+      <button id="createExamBtn"
+        class="mt-8 rounded-md bg-indigo-500 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
         Create Exam
       </button>
     </div>
@@ -81,10 +67,7 @@
         View Exams
       </h2>
 
-      <ul
-        id="examsList"
-        class="space-y-3 text-gray-400"
-      >
+      <ul id="examsList" class="space-y-3 text-gray-400">
         <li class="cursor-pointer rounded bg-white/5 p-3 hover:bg-white/10">
           Exam Name
         </li>
@@ -92,7 +75,10 @@
     </div>
 
   </div>
-
-  <script src="Teacher_Exam.js"></script>
+  <script src="../JS/Core/StorageService.js"></script>
+  <script src="../JS/Services/UserService.js"></script>
+  <script src="../JS/Services/ExamService.js"></script>
+  <script src="../JS/Logic/Teacher_Exam.js"></script>
 </body>
+
 </html>

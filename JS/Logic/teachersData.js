@@ -15,7 +15,8 @@
   teachers.push({
     id: 1,
     userId: tUserId1,
-    course: "Plants"
+    course: "Plants",
+    mode: "light"
   });
   let tUserId2 = 1002;
   users.push({
@@ -27,7 +28,8 @@
   teachers.push({
     id: 2,
     userId: tUserId2,
-    course: "Planets"
+    course: "Planets",
+    mode: "light"
   });
 
   let tUserId3 = 1003;
@@ -40,7 +42,8 @@
   teachers.push({
     id: 3,
     userId: tUserId3,
-    course: "Animals"
+    course: "Animals",
+    mode: "light"
   });
 
   localStorage.setItem("users", JSON.stringify(users));
