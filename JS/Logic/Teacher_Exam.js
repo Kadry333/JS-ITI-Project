@@ -1,3 +1,4 @@
+//StorageService.clearAll();
 class TeacherExamPage {
     constructor() {
         this.studentsList = document.getElementById("studentsList");
@@ -27,7 +28,7 @@ class TeacherExamPage {
     }
     loadExams() {
         this.examsList.innerHTML = "";
-        let exams = ExamService.getExams();
+        let exams = ExamService.getTeacherExams();
         exams.forEach(exam => {
             let li = document.createElement("li");
             li.className = "cursor-pointer rounded bg-white/5 p-3 hover:bg-white/10";
@@ -46,11 +47,13 @@ class TeacherExamPage {
         let examName = document.getElementById("examName").value;
         let examDuration = document.getElementById("examDuration").value;
         let questionsCount = document.getElementById("questionsCount").value;
-        let teacherId = sessionStorage.getItem("currentUserId");
-        if (!examName || !examDuration || questionsCount < 15) {
-            alert("Please fill all fields (min 15 questions)");
-            return;
-        }
+        let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+        let teacherId = Number(currentUser.id);
+        console.log(teacherId);
+        // if (!examName || !examDuration || questionsCount < 15) {
+        //     alert("Please fill all fields (min 15 questions)");
+        //     return;
+        // }
         let selectedStudents = [];
         document.querySelectorAll(".student-checkbox:checked")
             .forEach(student => selectedStudents.push(student.value));

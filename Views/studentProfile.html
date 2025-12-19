@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
+    <img id="profileImage">
     <!-- <script src="StudentRegister.js"></script> -->
     <script>
         let currentStudentId = sessionStorage.getItem("currentUserId");
@@ -16,11 +17,16 @@
             if(students[i].id == currentStudentId)
             {
                 currentStudent = students[i];
+                imageUrl = currentStudent.imageUrl;
                 break;
             }
 
         }
         console.log(currentStudent);
+        document.getElementById("profileImage").src = currentStudent.imageUrl;
+
+        
     </script>
+    
 </body>
 </html>

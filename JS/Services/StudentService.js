@@ -5,6 +5,7 @@ class StudentService {
     static getStudentByUsername(username) {
         return this.getStudents().find(s => s.username == username);
     }
+    
     static registerStudent(data) {
         let students = this.getStudents();
         if (students.some(student => student.username == data.username))
@@ -17,7 +18,7 @@ class StudentService {
             role: "student",
             grade: data.grade,
             mobile: data.mobile,
-            imageUrl: data.image,
+            imageUrl: data.imageUrl,
             completedExams: [],
             requiredExams: [],
             theme: "light"

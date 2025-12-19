@@ -1,12 +1,20 @@
 class ExamService {
-    static getExams() {
-        return StorageService.get("exams");
+    static getAllExams() {
+         let data = JSON.parse(localStorage.getItem("exams"));
+        return data ? data : [];
+    }
+    static getTeacherExams()
+    {
+        let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+        return this.getAllExams().filter(exam =>
+            exam.teacherId == currentUser.id
+        );
     }
     static saveExams(exams) {
         StorageService.set("exams", exams);
     }
     static createExam(data) {
-        let exams = this.getExams();
+        let exams = this.getAllExams();
 
         let exam = {
             id: StorageService.generateId("examId"),

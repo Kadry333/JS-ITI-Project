@@ -19,8 +19,8 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     loginMessage.classList.remove("hidden");
     loginMessage.classList.remove("text-red-700");
     loginMessage.classList.add("text-green-500");
-    sessionStorage.setItem("currentUserId", currentUser.id);
-    setTimeout(() => {
+    sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+     setTimeout(() => {
         if (currentUser.role == "student")
             window.location.href = "studentProfile.html";
         else
