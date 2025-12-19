@@ -9,18 +9,18 @@ class TeacherExamPage {
     }
     loadStudents() {
         let students = StorageService.get("students");
-        let users = StorageService.get("users");
+        //let users = StorageService.get("users");
         this.studentsList.innerHTML = "";
         students.forEach(student => {
-            let user = users.find(user=>user.id == student.userId);
+            //let user = users.find(user=>user.id == student.userId);
             let label = document.createElement("label");
             label.innerHTML = `
                 <input 
                     type="checkbox" 
                     class="student-checkbox"
-                    value="${student.userId}"
+                    value="${student.id}"
                 />
-                <span>${user.username}</span>
+                <span>${student.username}</span>
             `;
             this.studentsList.appendChild(label);
         });
@@ -46,7 +46,7 @@ class TeacherExamPage {
         let examName = document.getElementById("examName").value;
         let examDuration = document.getElementById("examDuration").value;
         let questionsCount = document.getElementById("questionsCount").value;
-        let teachetId = sessionStorage.getItem("currentUserId");
+        let teacherId = sessionStorage.getItem("currentUserId");
         if (!examName || !examDuration || questionsCount < 15) {
             alert("Please fill all fields (min 15 questions)");
             return;
@@ -62,7 +62,7 @@ class TeacherExamPage {
             examName,
             examDuration,
             questionsCount,
-            teachetId,
+            teacherId,
             selectedStudents,
         });
         document.querySelectorAll(".student-checkbox:checked")

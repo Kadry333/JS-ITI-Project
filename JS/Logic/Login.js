@@ -1,9 +1,9 @@
 
-document.getElementById("loginForm").addEventListener("submit", function (e) {
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     let userName = document.getElementById("username").value;
     let password = document.getElementById("password").value;
-    let currentUser = UserService.login(userName, password);
+    let currentUser = await UserService.login(userName, password);
     let loginMessage = document.getElementById("loginMessage");
     if (!currentUser) {
         loginMessage.textContent = "Invalid username or password";

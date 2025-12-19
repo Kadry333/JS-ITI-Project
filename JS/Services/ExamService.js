@@ -23,11 +23,12 @@ class ExamService {
 
         return exam.id;
     }
-    static assignExamToStudent(examId,studentUserId)
+    static assignExamToStudent(examId,studentId)
     {
         let students = StorageService.get("students");
+
         students.forEach(student => {
-            if(student.userId == studentUserId)
+            if(student.id == studentId)
             {
                 student.requiredExams.push({
                     examId: examId,
