@@ -1,78 +1,253 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-900">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../forms/src/output.css" />
   <title>Add Questions</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 15px;
+    }
+
+    .progress-text {
+      text-align: center;
+      color: #6b7280;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .progress-text span {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .form-group textarea,
+    .answers-grid input,
+    .controls-grid select,
+    .controls-grid input,
+    .form-group input[type="file"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #111827;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    textarea:focus,
+    .answers-grid input:focus,
+    .controls-grid select:focus,
+    .controls-grid input:focus {
+      outline: none;
+      border-color: #9ca3af;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 640px) {
+      .answers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .answers-grid input::placeholder,
+    .controls-grid input::placeholder {
+      color: #9ca3af;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    @media (min-width: 640px) {
+      .controls-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .form-group input[type="file"] {
+      cursor: pointer;
+    }
+
+    .form-group input[type="file"]::-webkit-file-upload-button {
+      padding: 8px 18px;
+      background: #e5e7eb;
+      color: #374151;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 15px;
+      transition: background 0.2s ease;
+    }
+
+    .form-group input[type="file"]::-webkit-file-upload-button:hover {
+      background: #d1d5db;
+    }
+
+    .next-button {
+      width: 100%;
+      padding: 14px 20px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .next-button:hover {
+      background: #1f2937;
+    }
+
+    .next-button:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 20px 10px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+
 </head>
 
-<body class="h-full">
-  <div class="min-h-full px-6 py-10 lg:px-20">
+<body>
+  <div class="container">
 
-    <h1 class="mb-4 text-center text-3xl font-bold text-white">
-      Add Questions
-    </h1>
+    <h1>Add Questions</h1>
 
-    <p class="mb-8 text-center text-gray-300">
-      Question <span class="font-semibold">1</span> of <span class="font-semibold">15</span>
+    <p class="progress-text">
+      Question <span id="currentQuestion">1</span> of <span id="totalQuestions">15</span>
     </p>
 
-    <div class="rounded-lg bg-white/5 p-6 outline outline-1 outline-white/10">
+    <div class="card">
+      <form id="questionForm">
+        <!-- Question Text -->
+        <div class="form-group">
+          <label>Question Text</label>
+          <textarea id="questionText" placeholder="Enter your question here..."></textarea>
+        </div>
 
-      <!-- Question Text -->
-      <div class="mb-4">
-        <label class="block text-sm text-gray-300">Question Text</label>
-        <textarea
-          class="mt-1 w-full rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10"></textarea>
-      </div>
+        <!-- Image -->
+        <div class="form-group">
+          <label>Question Image</label>
+          <input id="questionImage" type="file" accept="image/*">
+        </div>
 
-      <!-- Image -->
-      <div class="mb-4">
-        <label class="block text-sm text-gray-300">Question Image</label>
-        <input type="file"
-          class="mt-1 w-full text-sm text-gray-300 file:rounded file:border-0 file:bg-indigo-500 file:px-3 file:py-1 file:text-white hover:file:bg-indigo-400">
-      </div>
+        <!-- Answers -->
+        <div class="answers-grid">
+          <input id="answerA" placeholder="Answer A" type="text">
+          <input id="answerB" placeholder="Answer B" type="text">
+          <input id="answerC" placeholder="Answer C" type="text">
+          <input id="answerD" placeholder="Answer D" type="text">
+        </div>
 
-      <!-- Answers -->
-      <div class="mb-4 grid gap-4 sm:grid-cols-2">
-        <input placeholder="Answer A"
-          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
-        <input placeholder="Answer B"
-          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
-        <input placeholder="Answer C"
-          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
-        <input placeholder="Answer D"
-          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
-      </div>
+        <!-- Controls -->
+        <div class="controls-grid">
+          <select id="correctAnswer">
+            <option value="">Correct Answer</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
 
-      <!-- Controls -->
-      <div class="grid gap-4 sm:grid-cols-3">
-        <select class="rounded-md bg-white/5 px-3 py-2 text-gray-200 outline outline-1 outline-white/10">
-          <option>Correct Answer</option>
-          <option>A</option>
-          <option>B</option>
-          <option>C</option>
-          <option>D</option>
-        </select>
+          <select id="difficulty">
+            <option value="">Difficulty</option>
+            <option value="Easy">Easy</option>
+            <option value="Middle">Middle</option>
+            <option value="Hard">Hard</option>
+          </select>
 
-        <select class="rounded-md bg-white/5 px-3 py-2 text-gray-200 outline outline-1 outline-white/10">
-          <option>Difficulty</option>
-          <option>Easy</option>
-          <option>Middle</option>
-          <option>Hard</option>
-        </select>
+          <input id="score" type="number" placeholder="Score" min="1" />
+        </div>
 
-        <input type="number" placeholder="Score"
-          class="rounded-md bg-white/5 px-3 py-2 text-gray-100 outline outline-1 outline-white/10">
-      </div>
+        <button id="nextButton" class="next-button">Next Question</button>
+      </form>
 
-      <button
-        class="mt-6 w-full rounded-md bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
-        Next Question
-      </button>
+
 
     </div>
   </div>
+  <script src="../JS/Core/StorageService.js"></script>
+  <script src="../JS/Services/AddQuestionService.js"></script>
+  <script src="../JS/Services/ExamService.js"></script>
+  <script src="../JS/Services/CloudinaryService.js"></script>
+  <script src="../JS/Logic/TeacherQuestions.js"></script>
+
 </body>
+
 </html>
