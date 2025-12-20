@@ -13,6 +13,12 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
     if (image) {
         imageUrl = await cloudinaryService.uploadImageToCloudinary(image);
     }
+    if(!username || !password || !grade || !mobile || !image)
+    {
+         message.textContent = "Please Complete All Data";
+        message.style.color = "red";
+        return;
+    }
 
     let result = StudentService.registerStudent({ username, password, grade, mobile, imageUrl });
     if (!result) {
@@ -21,7 +27,7 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
         return;
     }
     sessionStorage.setItem("currentUserId", result.id);
-    message.textContent = "Logged in Successfully";
+    message.textContent = "Registered Successfully";
     message.style.color = "green";
     setTimeout(() => {
         window.location.href = "studentProfile.html"
