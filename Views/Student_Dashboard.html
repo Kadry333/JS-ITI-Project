@@ -10,6 +10,8 @@
 
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/JS/Logic/Login.js"></script>
+    <script defer src="/JS/Logic/studentDashboard.js"></script>
 
     <style>
       body {
@@ -17,8 +19,6 @@
           sans-serif;
       }
     </style>
-    <!-- <link rel="stylesheet" href="/forms/src/output.css" /> -->
-    <script src="student.js"></script>
   </head>
   <body class="bg-gray-50">
     <!-- Dashboard Screen -->
@@ -34,8 +34,18 @@
                 <span id="student-initials">SJ</span>
               </div>
               <div>
-                <h1 class="text-xl font-semibold text-gray-900" id="student-name">Ahmed Tarek</h1>
-                <p class="text-sm text-gray-500" id="student-role">Student</p>
+                <h1 class="text-xl font-semibold text-gray-900" id="student-name">Sarah Johnson</h1>
+                <div class="flex items-center gap-4 mt-1">
+                  <p class="text-sm text-gray-500" id="student-role">Student</p>
+                  <div class="flex items-center gap-1 text-sm text-gray-500">
+                    <i data-lucide="award" class="w-4 h-4"></i>
+                    <span>Grade <span id="student-grade">2</span></span>
+                  </div>
+                  <div class="flex items-center gap-1 text-sm text-gray-500">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                    <span id="student-mobile">+1 (555) 123-4567</span>
+                  </div>
+                </div>
               </div>
             </div>
             <button
@@ -51,78 +61,22 @@
 
       <!-- Main Content -->
       <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="mb-6">
+        <div class="mb-8">
           <h1 class="text-3xl font-bold text-gray-900">Student Dashboard</h1>
           <p class="text-gray-600 mt-1">
             Welcome back, <span id="welcome-name">Sarah Johnson</span>
           </p>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm text-gray-600">Total Subjects</p>
-                <p class="text-3xl font-bold text-gray-900 mt-2" id="total-subjects">6</p>
-              </div>
-              <div class="bg-blue-50 p-3 rounded-lg">
-                <i data-lucide="book-open" class="w-6 h-6 text-blue-500"></i>
-              </div>
-            </div>
-          </div>
-          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm text-gray-600">Available Exams</p>
-                <p class="text-3xl font-bold text-gray-900 mt-2" id="available-exams">3</p>
-              </div>
-              <div class="bg-purple-50 p-3 rounded-lg">
-                <i data-lucide="file-text" class="w-6 h-6 text-purple-500"></i>
-              </div>
-            </div>
-          </div>
-          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm text-gray-600">Average Score</p>
-                <p class="text-3xl font-bold text-gray-900 mt-2">
-                  <span id="average-score">85</span>%
-                </p>
-              </div>
-              <div class="bg-green-50 p-3 rounded-lg">
-                <i data-lucide="trending-up" class="w-6 h-6 text-green-500"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          <!-- Subjects Table -->
-          <div class="xl:col-span-2">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <!-- Completed Exams -->
+          <div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div class="px-6 py-5 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">Subjects & Scores</h2>
+                <h2 class="text-xl font-semibold text-gray-900">Completed Exams</h2>
               </div>
-              <div class="overflow-x-auto">
-                <table class="w-full">
-                  <thead class="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">
-                        Subject Name
-                      </th>
-                      <th class="px-6 py-3 text-center text-sm font-medium text-gray-600">
-                        Latest Score
-                      </th>
-                      <th class="px-6 py-3 text-center text-sm font-medium text-gray-600">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="subjects-tbody" class="divide-y divide-gray-200">
-                    <!-- Populated by JavaScript -->
-                  </tbody>
-                </table>
+              <div id="completed-exams-container" class="p-6 space-y-4">
+                <!-- Populated by JavaScript -->
               </div>
             </div>
           </div>
@@ -133,7 +87,7 @@
               <div class="px-6 py-5 border-b border-gray-200">
                 <h2 class="text-xl font-semibold text-gray-900">Available Exams</h2>
               </div>
-              <div id="exams-container" class="p-6 space-y-4">
+              <div id="available-exams-container" class="p-6 space-y-4">
                 <!-- Populated by JavaScript -->
               </div>
             </div>
@@ -225,7 +179,7 @@
           </button>
           <button
             id="submit-btn"
-            onclick="showSubmitConfirm()"
+            onclick="submitExam()"
             class="hidden px-6 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
           >
             Submit Exam
