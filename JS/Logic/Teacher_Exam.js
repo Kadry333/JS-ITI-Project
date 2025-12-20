@@ -1,4 +1,10 @@
 //StorageService.clearAll();
+let logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.addEventListener("click",function(e)
+{
+    sessionStorage.clear();
+    window.location.href = "login.html";
+});
 class TeacherExamPage {
     constructor() {
         this.studentsList = document.getElementById("studentsList");
@@ -26,22 +32,59 @@ class TeacherExamPage {
             this.studentsList.appendChild(label);
         });
     }
-    loadExams() {
-        this.examsList.innerHTML = "";
-        let exams = ExamService.getTeacherExams();
-        exams.forEach(exam => {
-            let li = document.createElement("li");
-            li.className = "cursor-pointer rounded bg-white/5 p-3 hover:bg-white/10";
-            li.textContent = exam.name;
+   loadExams() {
+    this.examsList.innerHTML = "";
+    let exams = ExamService.getTeacherExams();
+    
+    exams.forEach(exam => {
+        // if(exam.status !== "published") return;
+        
+        let li = document.createElement("li");
+        li.className = "exam-item";
+        
+        // Exam name
+        let examName = document.createElement("span");
+        examName.textContent = exam.name;
+        examName.className = "exam-name";
+        
 
-            li.addEventListener("click", () => {
-                sessionStorage.setItem("currentExamId", exam.id);
-                window.location.href = "Teacher_Questions.html";
-            });
+        let container = document.createElement("div");
+        container.className = "exam-actions";
+        
+        
+        let viewBtn = document.createElement("button");
+        viewBtn.textContent = "View";
+        viewBtn.className = "action-btn view-btn";
+        viewBtn.onclick = (e) => {
+            sessionStorage.setItem("currentExamId", exam.id);
+            window.location.href = "View_Exam.html";
+        };
+        
+    
+        let updateBtn = document.createElement("button");
+        updateBtn.textContent = "Update";
+        updateBtn.className = "action-btn update-btn";
+        updateBtn.onclick = (e) => {
+            sessionStorage.setItem("currentExamId", exam.id);
+            window.location.href = "Update_Exam.html";
+        };
+        
+        let deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "action-btn delete-btn";
+        deleteBtn.onclick = (e) => {
+            if(confirm(`Delete exam "${exam.name}"?`)) {
+                ExamService.deleteExam(exam.id);
+                this.loadExams();
+            }
+        };
+        
+        container.append(viewBtn, updateBtn, deleteBtn);
+        li.append(examName, container);
+        this.examsList.appendChild(li);
+    });
+}
 
-            this.examsList.appendChild(li);
-        });
-    }
     handleCreateExam(e) {
         e.preventDefault();
         let examName = document.getElementById("examName").value;
@@ -67,11 +110,8 @@ class TeacherExamPage {
             questionsCount,
             teacherId,
             selectedStudents,
+            status: "pending"
         });
-        document.querySelectorAll(".student-checkbox:checked")
-            .forEach(s => {
-                ExamService.assignExamToStudent(examId, s.value);
-            });
         sessionStorage.setItem("currentExamId", examId);
         window.location.href = "Teacher_Questions.html";
 

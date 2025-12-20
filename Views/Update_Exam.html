@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Exam Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #111827;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .question-number {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        #currentQuestion {
+            background: #111827;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        #questionForm {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #111827;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .answer-input {
+            position: relative;
+        }
+
+        .answer-input::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #111827;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 15px 15px 15px 55px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #111827;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .settings-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #111827;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* .score-input {
+            grid-column: 1 / -1;
+        }
+
+        .score-input input {
+            padding-left: 15px;
+        } */
+
+        button {
+            background: #111827;
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .answers-grid,
+            .settings-row {
+                grid-template-columns: 1fr;
+            }
+
+            /* .score-input {
+                grid-column: 1;
+            } */
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Update Exam Questions</h1>
+
+        <p class="question-number">Question <span id="currentQuestion">1</span></p>
+
+        <form id="questionForm">
+            <div class="form-group">
+                <label for="questionText">Question Text</label>
+                <textarea id="questionText" placeholder="Enter your question here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Question Image</label>
+                <img id="viewImage" style="max-width:200px; display:none;" />
+                <input type="file" id="questionImage"accept="image/*" />
+            </div>
+
+            <div class="form-group">
+                <label>Answer Options</label>
+                <div class="answers-grid">
+                    <div class="answer-input" data-label="A">
+                        <input type="text" id="answerA" placeholder="Answer A">
+                    </div>
+                    <div class="answer-input" data-label="B">
+                        <input type="text" id="answerB" placeholder="Answer B">
+                    </div>
+                    <div class="answer-input" data-label="C">
+                        <input type="text" id="answerC" placeholder="Answer C">
+                    </div>
+                    <div class="answer-input" data-label="D">
+                        <input type="text" id="answerD" placeholder="Answer D">
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-row">
+                <div class="form-group">
+                    <label for="correctAnswer">Correct Answer</label>
+                    <select id="correctAnswer">
+                        <option value="">Select Answer</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty">
+                        <option value="">Select Difficulty</option>
+                        <option>Easy</option>
+                        <option>Middle</option>
+                        <option>Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- <div class="form-group score-input">
+                <label for="score">Score Points</label>
+                <input type="number" id="score" placeholder="Enter score (e.g., 10)">
+            </div> -->
+
+            <button type="button" id="nextBtn">Next Question →</button>
+        </form>
+    </div>
+
+    <script src="../js/core/StorageService.js"></script>
+    <script src="../JS/Services/CloudinaryService.js"></script>
+    <script src="../js/services/ExamService.js"></script>
+    <script src = "../JS/Services/AddQuestionService.js"></script>
+    <script src="../js/logic/UpdateExam.js"></script>
+</body>
+
+</html>

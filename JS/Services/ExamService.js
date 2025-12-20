@@ -46,4 +46,33 @@ class ExamService {
         });
         StorageService.set("students",students);
     }
+    static updateExam(updatedExam)
+    {
+        let allExams = this.getAllExams();
+        for(let i = 0; i < allExams.length; i++)
+        {
+            if(allExams[i].id == updatedExam.id)
+            {
+                allExams[i] = updatedExam;
+                break;
+            }
+        }
+        this.saveExams(allExams);
+    }
+    static deleteExam(examId)
+    {
+        let allExams = this.getAllExams();
+        let exams = allExams.filter(exam => exam.id != examId);
+        this.saveExams(exams);
+        let students = StorageService.get("students");
+        students.forEach(student => {
+            if(student.requiredExams)
+                student.requiredExams = student.requiredExams.filter(requiredExam =>
+                requiredExam.examId != examId || requiredExam.status != "pending"
+            );
+            
+        });
+        StorageService.set("students",students);
+       
+    }
 }

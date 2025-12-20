@@ -7,6 +7,7 @@ if (!currentExam) {
     window.location.href = "Teacher_Exam.html";
 }
 let totalQuestions = parseInt(currentExam.totalQuestion);
+document.getElementById("totalQuestions").textContent = totalQuestions;
 console.log(totalQuestions);
 console.log(typeof (totalQuestions));
 let form = document.getElementById("questionForm");
@@ -34,21 +35,35 @@ form.addEventListener("submit", async function (e) {
         answerD: document.getElementById("answerD").value,
         correctAnswer: document.getElementById("correctAnswer").value,
         difficulty: document.getElementById("difficulty").value,
-        score: document.getElementById("score").value
+        score: 100/totalQuestions
     };
 
-    if (!newQuestion.questionText || !newQuestion.correctAnswer || !newQuestion.score) {
+    if (!newQuestion.questionText || !newQuestion.correctAnswer) {
         alert("Please complete the question");
         return;
     }
     questions.push(newQuestion);
     if (currentQuestionIndex == totalQuestions) {
+        if (!AddQustionService.validateDefiality(questions)) {
+            alert("Please make sure to have at least one question of each difficulty level: easy, medium, hard.");
+            AddQustionService.deleteExam(currentExam.id);
+            return;
+        }
+        // if (!AddQustionService.validateTotalScore(questions)) {
+        //     alert("Total score of all questions must be exactly 100.");
+        //     AddQustionService.deleteExam(currentExam.id);
+        //     return;
+        // }
         currentExam.questions = questions;
+        currentExam.status = "published";
         let allExams = ExamService.getAllExams();
         let exam = allExams.find(exam => exam.id == currentExam.id);
         let index = allExams.indexOf(exam);
         allExams.splice(index, 1, currentExam)
-        ExamService.saveExams(allExams)
+        ExamService.saveExams(allExams);
+        currentExam.assignedStudents.forEach(studentId => {
+            ExamService.assignExamToStudent(currentExam.id, studentId);
+        });
         alert("Exam saved successfully");
         window.location.href = "Teacher_Exam.html";
         return;
