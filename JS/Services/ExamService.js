@@ -3,6 +3,10 @@ class ExamService {
          let data = JSON.parse(localStorage.getItem("exams"));
         return data ? data : [];
     }
+    static getExam(examId)
+    {
+        return this.getAllExams().find(e => e.id = examId);
+    }
     static getTeacherExams()
     {
         let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));

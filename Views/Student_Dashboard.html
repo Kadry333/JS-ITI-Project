@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard - Online Exam System</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- <script src="/JS/Logic/Login.js"></script> -->
+    <script defer src="/JS/Logic/studentDashboard.js"></script>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+          sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="min-h-screen">
+      <!-- Header -->
+      <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold"
+              >
+                <span id="student-initials">SJ</span>
+              </div>
+              <div>
+                <h1 class="text-xl font-semibold text-gray-900" id="student-name">Sarah Johnson</h1>
+                <div class="flex items-center gap-4 mt-1">
+                  <p class="text-sm text-gray-500" id="student-role">Student</p>
+                  <div class="flex items-center gap-1 text-sm text-gray-500">
+                    <i data-lucide="award" class="w-4 h-4"></i>
+                    <span>Grade <span id="student-grade">2</span></span>
+                  </div>
+                  <div class="flex items-center gap-1 text-sm text-gray-500">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                    <span id="student-mobile">+1 (555) 123-4567</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              onclick="handleLogout()"
+              class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <i data-lucide="log-out" class="w-5 h-5"></i>
+              <span class="hidden sm:inline">Logout</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-gray-900">Student Dashboard</h1>
+          <p class="text-gray-600 mt-1">
+            Welcome back, <span id="welcome-name">Sarah Johnson</span>
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <!-- Completed Exams -->
+          <div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div class="px-6 py-5 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Completed Exams</h2>
+              </div>
+              <div id="completed-exams-container" class="p-6 space-y-4">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Available Exams -->
+          <div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div class="px-6 py-5 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Available Exams</h2>
+              </div>
+              <div id="available-exams-container" class="p-6 space-y-4">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Exam Screen -->
+    <div id="exam-screen" class="min-h-screen hidden">
+      <!-- Exam Header -->
+      <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-xl font-semibold text-gray-900" id="exam-title">Exam Title</h1>
+              <p class="text-sm text-gray-600">
+                Question <span id="current-question-num">1</span> of
+                <span id="total-questions">5</span>
+              </p>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
+              <i data-lucide="clock" class="w-5 h-5 text-blue-600"></i>
+              <span id="timer" class="text-lg font-semibold text-blue-600">90:00</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Warning -->
+      <div class="bg-orange-50 border-b border-orange-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div class="flex items-center gap-3 text-orange-800">
+            <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i>
+            <p class="text-sm">
+              Once the exam starts, you cannot return to the dashboard until submission
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Content -->
+      <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm text-gray-600"
+                >Question <span id="question-number">1</span></span
+              >
+              <span class="text-sm text-gray-600"
+                ><span id="answered-count">0</span> /
+                <span id="total-questions-2">5</span> answered</span
+              >
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4" id="question-text">
+              Question text goes here
+            </h2>
+            <div
+              id="question-image-container"
+              class="hidden mb-6 rounded-lg overflow-hidden border border-gray-200"
+            >
+              <img id="question-image" src="" alt="Question visual" class="w-full h-auto" />
+            </div>
+          </div>
+
+          <!-- Answer Options -->
+          <div id="answer-options" class="space-y-3">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex items-center justify-between gap-4 mb-6">
+          <button
+            id="prev-btn"
+            onclick="previousQuestion()"
+            class="flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            Previous
+          </button>
+          <button
+            id="next-btn"
+            onclick="nextQuestion()"
+            class="flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          >
+            Next
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+          <button
+            id="submit-btn"
+            onclick="submitExam()"
+            class="hidden px-6 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+          >
+            Submit Exam
+          </button>
+        </div>
+
+        <!-- Question Navigator -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Question Navigator</h3>
+          <div id="question-navigator" class="grid grid-cols-5 sm:grid-cols-10 gap-2">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div
+      id="submit-modal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+    >
+      <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Submit Exam?</h3>
+        <p class="text-gray-600 mb-6">
+          You have answered <span id="modal-answered">0</span> out of
+          <span id="modal-total">5</span> questions. Are you sure you want to submit your exam?
+        </p>
+        <div class="flex gap-3">
+          <button
+            onclick="closeSubmitModal()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onclick="submitExam()"
+            class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

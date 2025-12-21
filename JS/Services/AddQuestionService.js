@@ -28,16 +28,6 @@ class AddQustionService {
         else
             return false;
     }
-    // static validateTotalScore(questions) {
-    //     let total = 0;
-    //     questions.forEach(q => {
-    //         total += Number(q.score);
-    //     });
-    //     if (total == 100)
-    //         return true;
-    //     else
-    //         return false;
-    // }
     static deleteExam(examId)
     {
         let exams = this.getAllExams();

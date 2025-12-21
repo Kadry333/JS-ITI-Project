@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam Results</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; }
+
+        .student-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .pagination-controls button {
+            padding: 8px 16px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .pagination-controls button:disabled { background: #ccc; }
+
+
+        
+
+        .q-img {
+            max-width: 200px;
+            max-height: 150px;
+            display: block;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .option {
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .correct-mark { background: #dcfce7; border-color: #86efac; color: #16a34a; font-weight: bold; }
+        .wrong-mark { background: #fee2e2; border-color: #fca5a5; color: #dc2626; text-decoration: line-through; }
+
+        .answer-summary {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exam Results</h1>
+        <div id="resultsContainer"></div>
+    </div>
+    <script src="../js/core/StorageService.js"></script>
+    <script src="../js/services/ExamService.js"></script>
+    <script src="../js/logic/ViewExam.js"></script>
+</body>
+</html>
