@@ -16,10 +16,8 @@ class TeacherExamPage {
     }
     loadStudents() {
         let students = StorageService.get("students");
-        //let users = StorageService.get("users");
         this.studentsList.innerHTML = "";
         students.forEach(student => {
-            //let user = users.find(user=>user.id == student.userId);
             let label = document.createElement("label");
             label.innerHTML = `
                 <input 
@@ -37,8 +35,6 @@ class TeacherExamPage {
     let exams = ExamService.getTeacherExams();
     
     exams.forEach(exam => {
-        // if(exam.status !== "published") return;
-        
         let li = document.createElement("li");
         li.className = "exam-item";
         
@@ -93,14 +89,14 @@ class TeacherExamPage {
         let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
         let teacherId = Number(currentUser.id);
         console.log(teacherId);
-        // if (!examName || !examDuration || questionsCount < 15) {
-        //     alert("Please fill all fields (min 15 questions)");
-        //     return;
-        // }
+        if (!examName || !examDuration || questionsCount < 15) {
+            alert("Please fill all fields (min 15 questions)");
+            return;
+        }
         let selectedStudents = [];
         document.querySelectorAll(".student-checkbox:checked")
             .forEach(student => selectedStudents.push(student.value));
-        if (selectedStudents.length === 0) {
+        if (selectedStudents.length == 0) {
             alert("Select at least one student!");
             return;
         }

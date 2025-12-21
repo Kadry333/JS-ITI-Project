@@ -49,11 +49,6 @@ form.addEventListener("submit", async function (e) {
             AddQustionService.deleteExam(currentExam.id);
             return;
         }
-        // if (!AddQustionService.validateTotalScore(questions)) {
-        //     alert("Total score of all questions must be exactly 100.");
-        //     AddQustionService.deleteExam(currentExam.id);
-        //     return;
-        // }
         currentExam.questions = questions;
         currentExam.status = "published";
         let allExams = ExamService.getAllExams();
