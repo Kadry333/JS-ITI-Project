@@ -30,7 +30,7 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
     message.textContent = "Registered Successfully";
     message.style.color = "green";
     setTimeout(() => {
-        window.location.href = "studentProfile.html"
+        window.location.href = "login.html"
 
     }, 1000);
 
