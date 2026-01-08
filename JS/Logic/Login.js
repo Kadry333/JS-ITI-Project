@@ -1,4 +1,6 @@
 
+// sessionStorage.clear();
+// localStorage.clear();
 document.getElementById("loginForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     let userName = document.getElementById("username").value;
@@ -19,14 +21,21 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     loginMessage.classList.remove("hidden");
     loginMessage.classList.remove("text-red-700");
     loginMessage.classList.add("text-green-500");
-    sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
-     setTimeout(() => {
-        if (currentUser.role == "student")
-            window.location.href = "Student_Dashboard.html";
-        else
-            window.location.href = "Teacher_Exam.html";
-    }, 1000);
+    if (localStorage.getItem("userId") == null) {
+        sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+        localStorage.setItem("userId", currentUser.id);
+        setTimeout(() => {
+            if (currentUser.role == "student")
+                window.location.href = "Student_Dashboard.html";
+            else
+                window.location.href = "Teacher_Exam.html";
+        }, 1000);
+    }
+    else
+    {
+        window.location.href = "login.html";
+    }
+
 
 
 });
-

@@ -1,0 +1,46 @@
+  body.dark-mode {
+      background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+      color: #f3f4f6;
+    }
+
+    body.dark-mode .card {
+      background: #1f2937;
+      border-color: #374151;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode h1,
+    body.dark-mode .card h2,
+    body.dark-mode .form-group label,
+    body.dark-mode .students-section p {
+      color: #f3f4f6;
+    }
+
+    body.dark-mode .form-group input,
+    body.dark-mode #studentsList label,
+    body.dark-mode .exam-item {
+      background: #374151;
+      border-color: #4b5563;
+      color: #ffffff;
+    }
+
+    body.dark-mode .form-group input:focus {
+      background: #1f2937;
+      border-color: #6b7280;
+    }
+
+    /* Toggle Button Styling */
+    #themeToggle {
+      padding: 10px;
+      background: #374151;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    body.dark-mode #themeToggle {
+      background: #f3f4f6;
+      color: #111827;
+    }

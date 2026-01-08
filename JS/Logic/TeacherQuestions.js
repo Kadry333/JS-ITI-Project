@@ -46,7 +46,6 @@ form.addEventListener("submit", async function (e) {
     if (currentQuestionIndex == totalQuestions) {
         if (!AddQustionService.validateDefiality(questions)) {
             alert("Please make sure to have at least one question of each difficulty level: easy, medium, hard.");
-            AddQustionService.deleteExam(currentExam.id);
             return;
         }
         currentExam.questions = questions;

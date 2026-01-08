@@ -27,6 +27,7 @@ class ExamService {
             totalQuestion: data.questionsCount,
             teacherId: data.teacherId,
             assignedStudents: data.selectedStudents,
+            examsExpireDate: data.expireDate,
             questions: []
         };
 

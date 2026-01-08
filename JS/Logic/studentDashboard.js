@@ -28,6 +28,7 @@ let chosenAnswersMap = {};
 let correctAnswersCount = 0;
 let remainingTimeInSeconds = 0;
 let countdownTimer = null;
+//StorageService.deleteExpiredExams();
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -318,5 +319,6 @@ function submitExam() {
 
 function handleLogout() {
   sessionStorage.removeItem('currentUser');
+  localStorage.removeItem("userId");
   window.location.href = 'login.html';
 }

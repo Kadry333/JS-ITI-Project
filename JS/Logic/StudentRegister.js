@@ -19,7 +19,15 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
         message.style.color = "red";
         return;
     }
+    let regex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
+    if (!regex.test(password))
+    {
+        message.textContent = "Invalid Passwod Format";
+        message.style.color = "red";
+        return;
+
+    }
     let result = StudentService.registerStudent({ username, password, grade, mobile, imageUrl });
     if (!result) {
         message.textContent = "User Already Exsists";
@@ -33,6 +41,4 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
         window.location.href = "login.html"
 
     }, 1000);
-
-
 });

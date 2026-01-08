@@ -9,6 +9,8 @@
   <meta charset="UTF-8" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel = "stylesheet" href = "../CSS/theme.css">
+
 
   <title>Teacher Exams</title>
 
@@ -22,6 +24,10 @@
       box-sizing: border-box;
 
     }
+
+    /* Dark Mode Variables/Overrides */
+  
+
     body {
 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,6 +41,7 @@
       color: #1f2937;
 
     }
+
     .container {
 
       max-width: 1200px;
@@ -85,6 +92,15 @@
 
     #logoutBtn:active {
       transform: scale(0.98);
+    }
+
+    .welcome {
+      text-align: center;
+      font-size: 2.15rem;
+      font-weight: 1000;
+      color: burlywood;
+      margin: 20px 0 30px;
+      letter-spacing: 0.3px;
     }
 
     .card {
@@ -252,6 +268,7 @@
       transition: all 0.2s ease;
 
     }
+
     #studentsList label:hover {
 
       background: #f3f4f6;
@@ -259,6 +276,7 @@
       border-color: #d1d5db;
 
     }
+
     #studentsList input[type="checkbox"] {
 
       width: 18px;
@@ -270,6 +288,7 @@
       accent-color: #6b7280;
 
     }
+
     #createExamBtn {
 
       margin-top: 30px;
@@ -293,21 +312,25 @@
       transition: all 0.25s ease;
 
     }
+
     #createExamBtn:hover {
 
       background: #1f2937;
 
     }
+
     #createExamBtn:active {
 
       transform: scale(0.98);
 
     }
+
     .exams-card h2 {
 
       color: #111827;
 
     }
+
     #examsList {
 
       list-style: none;
@@ -340,92 +363,92 @@
 
 
 
- /* Exam list item with buttons */
-.exam-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background: #f9fafb;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  transition: all 0.2s ease;
-}
+    /* Exam list item with buttons */
+    .exam-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
 
-.exam-item:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
-}
+    .exam-item:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
 
-.exam-name {
-  color: #374151;
-  font-weight: 500;
-  flex: 1;
-}
+    .exam-name {
+      color: #374151;
+      font-weight: 500;
+      flex: 1;
+    }
 
-.exam-actions {
-  display: flex;
-  gap: 8px;
-}
+    .exam-actions {
+      display: flex;
+      gap: 8px;
+    }
 
-.action-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+    .action-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-.view-btn {
-  background: #3b82f6;
-  color: white;
-}
+    .view-btn {
+      background: #3b82f6;
+      color: white;
+    }
 
-.view-btn:hover {
-  background: #2563eb;
-}
+    .view-btn:hover {
+      background: #2563eb;
+    }
 
-.update-btn {
-  background: #10b981;
-  color: white;
-}
+    .update-btn {
+      background: #10b981;
+      color: white;
+    }
 
-.update-btn:hover {
-  background: #059669;
-}
+    .update-btn:hover {
+      background: #059669;
+    }
 
-.delete-btn {
-  background: #ef4444;
-  color: white;
-}
+    .delete-btn {
+      background: #ef4444;
+      color: white;
+    }
 
-.delete-btn:hover {
-  background: #dc2626;
-}
+    .delete-btn:hover {
+      background: #dc2626;
+    }
 
-.action-btn:active {
-  transform: scale(0.95);
-}
+    .action-btn:active {
+      transform: scale(0.95);
+    }
 
-/* Responsive design */
-@media (max-width: 640px) {
-  .exam-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-  
-  .exam-actions {
-    justify-content: stretch;
-  }
-  
-  .action-btn {
-    flex: 1;
-  }
-}
+    /* Responsive design */
+    @media (max-width: 640px) {
+      .exam-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .exam-actions {
+        justify-content: stretch;
+      }
+
+      .action-btn {
+        flex: 1;
+      }
+    }
 
 
 
@@ -471,8 +494,19 @@
 
     <div class="header">
       <h1>Teacher Dashboard – Exams</h1>
+      <button id="themeToggle">🌙 Dark Mode</button>
       <button id="logoutBtn">Logout</button>
     </div>
+
+    <div class="welcome"></div>
+    <script>
+      let teacher = JSON.parse(sessionStorage.getItem("currentUser"));
+      let teacherUserName = teacher.username;
+      let welcome = document.getElementsByClassName("welcome")[0];
+      welcome.textContent = "Welcome, " + teacherUserName;
+    </script>
+
+
 
     <div class="card">
 
@@ -500,6 +534,15 @@
 
         </div>
 
+
+
+        <div class="form-group">
+
+          <label for="expiryDate">Expiry Date</label>
+
+          <input type="datetime-local" id="expiryDate" placeholder="Expiration Date" />
+
+        </div>
 
 
         <div class="form-group">
@@ -567,6 +610,7 @@
   <script src="../JS/Services/ExamService.js"></script>
 
   <script src="../JS/Logic/Teacher_Exam.js"></script>
+  <script src="../JS/Services/ThemeService.js"></script>
 
 </body>
 

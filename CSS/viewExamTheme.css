@@ -1,0 +1,65 @@
+/* --- Global Dark Mode Background --- */
+body.dark-mode {
+    background: #0f172a !important; /* Deep navy background */
+    color: #f1f5f9 !important;
+}
+
+/* --- Exam Results Page Specifics --- */
+
+/* The main white card in your screenshot */
+body.dark-mode .student-card {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* The horizontal line in the header */
+body.dark-mode .card-header {
+    border-bottom-color: #334155 !important;
+}
+
+/* Pagination buttons (Next/Previous) */
+body.dark-mode .pagination-controls button {
+    background: #3b82f6 !important;
+}
+
+body.dark-mode .pagination-controls button:disabled {
+    background: #475569 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed;
+}
+
+/* Individual Answer Option Boxes */
+body.dark-mode .option {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #ffffff !important;
+}
+
+/* Correct Answer Styling (Dark Mode) */
+body.dark-mode .correct-mark {
+    background: rgba(22, 163, 74, 0.2) !important; /* Subtle Green glow */
+    border-color: #22c55e !important;
+    color: #4ade80 !important;
+}
+
+/* Wrong Answer Styling (Dark Mode) */
+body.dark-mode .wrong-mark {
+    background: rgba(220, 38, 38, 0.2) !important; /* Subtle Red glow */
+    border-color: #ef4444 !important;
+    color: #f87171 !important;
+}
+
+/* Text visibility for Question labels (Q1, Q2, etc.) */
+body.dark-mode h1, 
+body.dark-mode h3, 
+body.dark-mode p, 
+body.dark-mode .card-header span {
+    color: #f8fafc !important;
+}
+
+/* Images in Dark Mode */
+body.dark-mode .q-img {
+    border: 2px solid #334155;
+    opacity: 0.9; /* Slightly dim bright images */
+}

@@ -3,8 +3,10 @@ let logoutBtn = document.getElementById("logoutBtn");
 logoutBtn.addEventListener("click",function(e)
 {
     sessionStorage.clear();
+    localStorage.removeItem("userId");
     window.location.href = "login.html";
 });
+StorageService.deleteExpiredExams();
 class TeacherExamPage {
     constructor() {
         this.studentsList = document.getElementById("studentsList");
@@ -35,6 +37,7 @@ class TeacherExamPage {
     let exams = ExamService.getTeacherExams();
     
     exams.forEach(exam => {
+        
         let li = document.createElement("li");
         li.className = "exam-item";
         
@@ -86,11 +89,16 @@ class TeacherExamPage {
         let examName = document.getElementById("examName").value;
         let examDuration = document.getElementById("examDuration").value;
         let questionsCount = document.getElementById("questionsCount").value;
+        let expireDate = document.getElementById("expiryDate").value;
         let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
         let teacherId = Number(currentUser.id);
         console.log(teacherId);
         if (!examName || !examDuration || questionsCount < 15) {
             alert("Please fill all fields (min 15 questions)");
+            return;
+        }
+        if (new Date(expireDate) <= new Date()) {
+            alert("Expiry date must be in the future");
             return;
         }
         let selectedStudents = [];
@@ -106,6 +114,7 @@ class TeacherExamPage {
             questionsCount,
             teacherId,
             selectedStudents,
+            expireDate,
             status: "pending"
         });
         sessionStorage.setItem("currentExamId", examId);
@@ -113,6 +122,8 @@ class TeacherExamPage {
 
     }
 }
+
 document.addEventListener("DOMContentLoaded", function () {
+    
     new TeacherExamPage();
 });

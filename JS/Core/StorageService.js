@@ -22,9 +22,16 @@ class StorageService {
         localStorage.setItem(key, newId);
         return newId;
     }
+    static deleteExpiredExams() {
+        let exams = JSON.parse(localStorage.getItem("exams")) || [];
+        let currentDate = new Date();
+        exams = exams.filter(exam => new Date(exam.examsExpireDate) > currentDate);
+        localStorage.setItem("exams", JSON.stringify(exams));
+    }
+    
 
     static clearAll() {
-        localStorage.clear();
-        sessionStorage.clear();
-    }
+            localStorage.clear();
+            sessionStorage.clear();
+        }
 }
