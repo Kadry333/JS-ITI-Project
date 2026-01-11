@@ -1,3 +1,6 @@
+/***********************
+ * DOM ELEMENTS
+ ***********************/
 const dashboardSection = document.getElementById('dashboard-screen');
 const examSection = document.getElementById('exam-screen');
 const timerDisplay = document.getElementById('timer');
@@ -9,18 +12,25 @@ const questionsNavigatorContainer = document.getElementById('question-navigator'
 const previousButton = document.getElementById('prev-btn');
 const nextButton = document.getElementById('next-btn');
 const submitButton = document.getElementById('submit-btn');
-const studentInitialsLabel = document.getElementById('student-initials');
+
+const studentAvatarImg = document.getElementById('student-avatar');
 const studentNameLabel = document.getElementById('student-name');
 const studentRoleLabel = document.getElementById('student-role');
 const studentGradeLabel = document.getElementById('student-grade');
 const studentMobileLabel = document.getElementById('student-mobile');
 const welcomeStudentLabel = document.getElementById('welcome-name');
+
 const completedExamsContainer = document.getElementById('completed-exams-container');
 const availableExamsContainer = document.getElementById('available-exams-container');
 
+/***********************
+ * STATE VARIABLES
+ ***********************/
+let loggedInStudent = null;
+let storedExams = [];
+let coursesData = [];
 let difficultyBadgeElement = null;
-let loggedInStudent = JSON.parse(sessionStorage.getItem('currentUser'));
-let storedExams = JSON.parse(localStorage.getItem('exams')) || [];
+
 let activeExamData = null;
 let activeExamQuestions = [];
 let currentQuestionIndex = 0;
@@ -28,7 +38,49 @@ let chosenAnswersMap = {};
 let correctAnswersCount = 0;
 let remainingTimeInSeconds = 0;
 let countdownTimer = null;
-//StorageService.deleteExpiredExams();
+
+// Exam protection event handlers (stored for removal)
+let examProtectionHandlers = {
+  beforeUnload: null,
+  popstate: null,
+  contextmenu: null,
+  keydown: null,
+  beforeunload: null,
+};
+
+/***********************
+ * HELPERS
+ ***********************/
+function getCourseName(teacherId) {
+  const teacher = coursesData.find((t) => t.id == teacherId);
+  return teacher ? teacher.course : 'Unknown Course';
+}
+
+// Theme Toggle
+function toggleTheme() {
+  const body = document.getElementById('app-body');
+  const isDark = body.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  updateThemeIcon();
+}
+
+function updateThemeIcon() {
+  const body = document.getElementById('app-body');
+  const icon = document.getElementById('theme-icon');
+  if (icon) {
+    icon.setAttribute('data-lucide', body.classList.contains('dark') ? 'sun' : 'moon');
+    lucide.createIcons();
+  }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const body = document.getElementById('app-body');
+  if (savedTheme === 'dark') {
+    body.classList.add('dark');
+  }
+  updateThemeIcon();
+}
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -51,28 +103,53 @@ function difficultyColor(lvl) {
   return 'bg-gray-400';
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+/***********************
+ * INIT
+ ***********************/
+window.addEventListener('DOMContentLoaded', async () => {
+  loggedInStudent = JSON.parse(sessionStorage.getItem('currentUser'));
+
   if (!loggedInStudent) {
     window.location.href = 'login.html';
     return;
   }
+
   const allStudents = JSON.parse(localStorage.getItem('students')) || [];
   const latestData = allStudents.find((s) => s.id === loggedInStudent.id);
+
   if (latestData) {
     loggedInStudent = latestData;
     sessionStorage.setItem('currentUser', JSON.stringify(latestData));
   }
+
   storedExams = JSON.parse(localStorage.getItem('exams')) || [];
+
+  try {
+    coursesData = await TeacherService.getTeachers();
+  } catch (e) {
+    console.error(e);
+  }
+
+  initTheme();
   renderDashboardUI();
+
+  // Initialize Lucide icons
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
 });
 
+/***********************
+ * DASHBOARD
+ ***********************/
 function renderDashboardUI() {
-  studentInitialsLabel.textContent = loggedInStudent.username.slice(0, 2).toUpperCase();
+  studentAvatarImg.src = loggedInStudent.imageUrl || '';
   studentNameLabel.textContent = loggedInStudent.username;
   studentRoleLabel.textContent = loggedInStudent.role;
   studentGradeLabel.textContent = loggedInStudent.grade;
   studentMobileLabel.textContent = loggedInStudent.mobile;
   welcomeStudentLabel.textContent = loggedInStudent.username;
+
   renderCompletedExamsUI();
   renderAvailableExamsUI();
 }
@@ -80,57 +157,107 @@ function renderDashboardUI() {
 function renderCompletedExamsUI() {
   completedExamsContainer.innerHTML = '';
   const done = loggedInStudent.completedExams || [];
+
   if (done.length === 0) {
     completedExamsContainer.innerHTML = `<p>No completed exams yet.</p>`;
     return;
   }
+
   done.forEach((ex) => {
     const isPassed = ex.finalScore >= 50;
-    const statusClass = isPassed
-      ? 'bg-green-100 text-green-700 border-green-500'
-      : 'bg-red-100 text-red-700 border-red-500';
     const card = document.createElement('div');
-    card.className = `border-l-4 rounded p-4 flex justify-between items-center mb-3 bg-white shadow-sm ${statusClass}`;
+    const courseName = getCourseName(ex.teacherId);
+
+    card.className = `border-l-4 rounded-lg p-4 mb-3 bg-white shadow-sm ${
+      isPassed ? 'border-green-500' : 'border-red-500'
+    }`;
+
     card.innerHTML = `
+      <div class="flex justify-between items-start">
         <div>
-          <strong class="block text-gray-800">${ex.name}</strong>
-          <p class="text-[10px] opacity-70">${ex.dateTaken}</p>
+          <p class="text-xs text-blue-600 font-medium mb-1">${courseName}</p>
+          <strong class="text-lg">${ex.name}</strong>
+          <p class="text-sm text-gray-500 mt-1">📅 Taken: ${ex.dateTaken || 'N/A'}</p>
         </div>
         <div class="text-right">
-          <span class="text-lg font-bold">${ex.finalScore}</span>
-          <p class="text-[10px] uppercase font-bold">${isPassed ? 'Passed' : 'Failed'}</p>
+          <span class="text-2xl font-bold ${isPassed ? 'text-green-600' : 'text-red-600'}">${
+      ex.finalScore
+    }%</span>
+          <p class="text-xs font-semibold ${isPassed ? 'text-green-600' : 'text-red-600'}">${
+      isPassed ? '✓ Passed' : '✗ Failed'
+    }</p>
         </div>
+      </div>
     `;
+
     completedExamsContainer.appendChild(card);
   });
 }
 
 function renderAvailableExamsUI() {
   availableExamsContainer.innerHTML = '';
+
   const pending = storedExams.filter((ex) =>
     loggedInStudent.requiredExams.some(
       (r) => String(r.examId) === String(ex.id) && r.status === 'pending'
     )
   );
+
   if (pending.length === 0) {
     availableExamsContainer.innerHTML = `<p>No available exams.</p>`;
     return;
   }
+
   pending.forEach((ex) => {
     const card = document.createElement('div');
-    card.className = 'border rounded p-5 mb-3 bg-white';
+    const courseName = getCourseName(ex.teacherId);
+    const createdDate = ex.createdAt ? new Date(ex.createdAt).toLocaleDateString() : 'N/A';
+
+    // Get expiry date from exam
+    let expiryDateText = 'No expiry date';
+    let expiryDateClass = 'text-gray-500';
+    if (ex.examsExpireDate) {
+      const expiryDate = new Date(ex.examsExpireDate);
+      const now = new Date();
+      const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+
+      expiryDateText = `Expires: ${expiryDate.toLocaleDateString()}`;
+
+      if (daysUntilExpiry < 0) {
+        expiryDateClass = 'text-red-600 font-semibold';
+        expiryDateText = `Expired: ${expiryDate.toLocaleDateString()}`;
+      } else if (daysUntilExpiry <= 3) {
+        expiryDateClass = 'text-orange-600 font-semibold';
+      } else {
+        expiryDateClass = 'text-gray-500';
+      }
+    }
+
+    card.className =
+      'border rounded-lg p-5 mb-3 bg-white shadow-sm hover:shadow-md transition-shadow';
     card.innerHTML = `
+      <p class="text-xs text-blue-600 font-medium mb-1">${courseName}</p>
       <h3 class="font-semibold text-lg">${ex.name}</h3>
-      <p class="text-gray-600 text-sm">${ex.totalQuestion} Questions • ${ex.duration} min</p>
-      <button class="mt-4 w-full bg-blue-600 text-white rounded py-2 hover:bg-blue-700 transition-all font-medium"
-       onclick="startExamProcess(${ex.id})">
+      <div class="flex items-center gap-4 text-gray-500 text-sm mt-2">
+        <span>📝 ${ex.totalQuestion} Questions</span>
+        <span>⏱️ ${ex.duration} min</span>
+      </div>
+      <div class="mt-2">
+        <span class="text-xs ${expiryDateClass}">📅 ${expiryDateText}</span>
+      </div>
+      <button class="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg py-2.5 font-medium hover:from-blue-700 hover:to-purple-700 transition-all"
+        onclick="startExamProcess(${ex.id})">
         Start Exam
       </button>
     `;
+
     availableExamsContainer.appendChild(card);
   });
 }
 
+/***********************
+ * EXAM
+ ***********************/
 function startExamProcess(examId) {
   activeExamData = storedExams.find((e) => String(e.id) === String(examId));
   activeExamQuestions = shuffleArray([...activeExamData.questions]);
@@ -138,10 +265,91 @@ function startExamProcess(examId) {
   currentQuestionIndex = 0;
   correctAnswersCount = 0;
   remainingTimeInSeconds = activeExamData.duration * 60;
+
+  // Prevent leaving the exam page
+  enableExamProtection();
+
   startTimer();
   dashboardSection.classList.add('hidden');
   examSection.classList.remove('hidden');
   renderExamUI();
+}
+
+function enableExamProtection() {
+  // Prevent page unload
+  examProtectionHandlers.beforeUnload = function (e) {
+    e.preventDefault();
+    e.returnValue = 'You cannot leave the exam until you submit or time runs out!';
+    return e.returnValue;
+  };
+  window.onbeforeunload = examProtectionHandlers.beforeUnload;
+
+  // Prevent back button
+  history.pushState(null, null, location.href);
+  examProtectionHandlers.popstate = function (e) {
+    history.pushState(null, null, location.href);
+    alert('You cannot go back during the exam. Please submit the exam to finish.');
+  };
+  window.onpopstate = examProtectionHandlers.popstate;
+
+  // Disable right-click context menu
+  examProtectionHandlers.contextmenu = function (e) {
+    e.preventDefault();
+    return false;
+  };
+  document.addEventListener('contextmenu', examProtectionHandlers.contextmenu);
+
+  // Disable keyboard shortcuts (F5, Ctrl+R, Ctrl+W, etc.)
+  examProtectionHandlers.keydown = function (e) {
+    // Disable F5 (refresh)
+    if (e.key === 'F5') {
+      e.preventDefault();
+      return false;
+    }
+    // Disable Ctrl+R (refresh)
+    if (e.ctrlKey && e.key === 'r') {
+      e.preventDefault();
+      return false;
+    }
+    // Disable Ctrl+W (close tab)
+    if (e.ctrlKey && e.key === 'w') {
+      e.preventDefault();
+      return false;
+    }
+    // Disable Ctrl+Shift+T (reopen closed tab)
+    if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+      e.preventDefault();
+      return false;
+    }
+    // Disable Alt+Left (back)
+    if (e.altKey && e.key === 'ArrowLeft') {
+      e.preventDefault();
+      return false;
+    }
+  };
+  document.addEventListener('keydown', examProtectionHandlers.keydown);
+}
+
+function disableExamProtection() {
+  window.onbeforeunload = null;
+  window.onpopstate = null;
+  if (examProtectionHandlers.contextmenu) {
+    document.removeEventListener('contextmenu', examProtectionHandlers.contextmenu);
+  }
+  if (examProtectionHandlers.keydown) {
+    document.removeEventListener('keydown', examProtectionHandlers.keydown);
+  }
+  if (examProtectionHandlers.beforeunload) {
+    window.removeEventListener('beforeunload', examProtectionHandlers.beforeunload);
+  }
+  // Clear handlers
+  examProtectionHandlers = {
+    beforeUnload: null,
+    popstate: null,
+    contextmenu: null,
+    keydown: null,
+    beforeunload: null,
+  };
 }
 
 function startTimer() {
@@ -151,17 +359,28 @@ function startTimer() {
     timerDisplay.textContent = formatSecondsToTime(remainingTimeInSeconds);
     if (remainingTimeInSeconds <= 0) {
       clearInterval(countdownTimer);
+      // Disable protection before auto-submitting
+      disableExamProtection();
       submitExam();
     }
   }, 1000);
 }
 
 function renderExamUI() {
+  // Header info
   document.getElementById('exam-title').textContent = activeExamData.name;
   document.getElementById('current-question-num').textContent = currentQuestionIndex + 1;
   document.getElementById('total-questions').textContent = activeExamQuestions.length;
+
+  // Question card info
+  document.getElementById('question-number').textContent = currentQuestionIndex + 1;
+  document.getElementById('answered-count').textContent = Object.keys(chosenAnswersMap).length;
+  document.getElementById('total-questions-2').textContent = activeExamQuestions.length;
+
   const q = activeExamQuestions[currentQuestionIndex];
   questionTextDisplay.textContent = q.questionText;
+
+  // Difficulty badge
   if (!difficultyBadgeElement) {
     difficultyBadgeElement = document.createElement('span');
     questionTextDisplay.parentNode.insertBefore(
@@ -173,6 +392,8 @@ function renderExamUI() {
   difficultyBadgeElement.className = `px-2 py-0.5 rounded text-[10px] font-bold ml-2 uppercase ${difficultyColor(
     q.difficulty
   )}`;
+
+  // Question image
   if (q.image) {
     questionImageWrapper.classList.remove('hidden');
     questionImage.src = q.image;
@@ -181,6 +402,7 @@ function renderExamUI() {
   } else {
     questionImageWrapper.classList.add('hidden');
   }
+
   renderAnswers(q);
   renderNavigator();
   updateButtons();
@@ -216,14 +438,15 @@ function renderAnswers(question) {
     }
     answersListContainer.appendChild(btn);
   });
-  nextButton.disabled = !alreadyAnsweredKey;
+  // Update button styling will be handled in updateButtons()
 }
 
 function selectAnswer(question, key) {
   if (chosenAnswersMap[currentQuestionIndex]) return;
   chosenAnswersMap[currentQuestionIndex] = key;
   if (key === question.correctAnswer) correctAnswersCount++;
-  renderExamUI();
+  renderAnswers(question);
+  updateButtons();
 }
 
 function renderNavigator() {
@@ -250,6 +473,8 @@ function updateButtons() {
   const isLastQuestion = currentQuestionIndex === activeExamQuestions.length - 1;
   const allAnsweredCount = Object.keys(chosenAnswersMap).length;
   const totalQuestions = activeExamQuestions.length;
+  const currentQuestionAnswered = chosenAnswersMap[currentQuestionIndex] !== undefined;
+
   if (isLastQuestion) {
     submitButton.classList.remove('hidden');
     nextButton.classList.add('hidden');
@@ -262,6 +487,17 @@ function updateButtons() {
   } else {
     submitButton.classList.add('hidden');
     nextButton.classList.remove('hidden');
+
+    // Style Next button based on whether current question is answered
+    if (currentQuestionAnswered) {
+      nextButton.className =
+        'flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors';
+      nextButton.disabled = false;
+    } else {
+      nextButton.className =
+        'flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-200 text-blue-400 cursor-not-allowed transition-colors';
+      nextButton.disabled = true;
+    }
   }
 }
 
@@ -283,7 +519,7 @@ function submitExam() {
   const total = activeExamQuestions.length;
   const allAnsweredCount = Object.keys(chosenAnswersMap).length;
   if (allAnsweredCount !== total) {
-    alert('يرجى الإجابة على جميع الأسئلة أولاً');
+    alert('Please answer all questions first');
     return;
   }
   clearInterval(countdownTimer);
@@ -291,6 +527,7 @@ function submitExam() {
   const examResult = {
     examId: activeExamData.id,
     name: activeExamData.name,
+    teacherId: activeExamData.teacherId,
     finalScore: finalScore,
     percentage: finalScore,
     dateTaken: new Date().toLocaleDateString(),
@@ -313,12 +550,15 @@ function submitExam() {
   allStudents = allStudents.map((s) => (s.id === loggedInStudent.id ? loggedInStudent : s));
   localStorage.setItem('students', JSON.stringify(allStudents));
   sessionStorage.setItem('currentUser', JSON.stringify(loggedInStudent));
-  alert('تم تسليم الامتحان بنجاح!');
+
+  // Disable exam protection before redirecting
+  disableExamProtection();
+
+  alert('Exam submitted successfully!');
   window.location.href = 'Student_Dashboard.html';
 }
 
 function handleLogout() {
   sessionStorage.removeItem('currentUser');
-  localStorage.removeItem("userId");
   window.location.href = 'login.html';
 }

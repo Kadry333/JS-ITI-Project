@@ -10,19 +10,46 @@
 
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="/JS/Logic/Login.js"></script>
-    <!-- <script src="/JS/Logic/Login.js"></script> -->
-    <script defer src="/JS/Logic/studentDashboard.js"></script>
-    
+    <script src="../JS/Core/StorageService.js"></script>
+    <script src="../JS/Services/TeacherService.js"></script>
+    <script src="../JS/Logic/Login.js"></script>
+    <script defer src="../JS/Logic/studentDashboard.js"></script>
 
     <style>
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
           sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      /* Dark Mode */
+      body.dark {
+        background-color: #1a1a2e;
+        color: #eee;
+      }
+      body.dark header {
+        background-color: #16213e;
+        border-color: #0f3460;
+      }
+      body.dark .bg-white {
+        background-color: #16213e !important;
+      }
+      body.dark .text-gray-900 {
+        color: #eee !important;
+      }
+      body.dark .text-gray-600,
+      body.dark .text-gray-500 {
+        color: #aaa !important;
+      }
+      body.dark .border-gray-200 {
+        border-color: #0f3460 !important;
+      }
+      body.dark .bg-gray-50 {
+        background-color: #1a1a2e !important;
       }
     </style>
   </head>
-  <body class="bg-gray-50">
+
+  <body class="bg-gray-50" id="app-body">
     <!-- Dashboard Screen -->
     <div id="dashboard-screen" class="min-h-screen">
       <!-- Header -->
@@ -30,11 +57,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold"
-              >
-                <span id="student-initials">SJ</span>
-              </div>
+              <img
+                id="student-avatar"
+                src=""
+                alt="Profile"
+                class="w-12 h-12 rounded-full object-cover"
+              />
               <div>
                 <h1 class="text-xl font-semibold text-gray-900" id="student-name">Sarah Johnson</h1>
                 <div class="flex items-center gap-4 mt-1">
@@ -50,13 +78,25 @@
                 </div>
               </div>
             </div>
-            <button
-              onclick="handleLogout()"
-              class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <i data-lucide="log-out" class="w-5 h-5"></i>
-              <span class="hidden sm:inline">Logout</span>
-            </button>
+            <div class="flex items-center gap-2">
+              <!-- Theme Toggle -->
+              <button
+                id="theme-toggle"
+                onclick="toggleTheme()"
+                class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Toggle Dark Mode"
+              >
+                <i data-lucide="moon" class="w-5 h-5" id="theme-icon"></i>
+              </button>
+              <!-- Logout -->
+              <button
+                onclick="handleLogout()"
+                class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span class="hidden sm:inline">Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
